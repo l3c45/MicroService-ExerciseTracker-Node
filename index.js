@@ -17,12 +17,12 @@ const nDate = () => new Date().toDateString()
 
 mongoose.connect(process.env['URL'], { useNewUrlParser: true, useUnifiedTopology: true })
 
-//const ObjectId = mongoose.Schema.ObjectId;
-
 const exerciseSchema=new mongoose.Schema({
    description: String,
    duration: Number,
-   date: String
+   date: {
+     type:String
+   }
   })
 
 const userSchema= new mongoose.Schema({
@@ -81,9 +81,10 @@ app.post("/api/users/:_id/exercises",  async function(req,res){
   const userId=req.params._id
   const description=req.body.description
   const duration=req.body.duration
+  const regex=/^\d{4}\D\d{2}\D\d{2}$/
   let date
   
-  if(req.body.date===""){
+  if(req.body.date===""|| !regex.test(req.body.date)){
      date=nDate()
     console.log("vacio")
   } else{
